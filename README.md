@@ -6,6 +6,6 @@
 #### 这是我简化后的实现
 ![](http://upload-images.jianshu.io/upload_images/1013170-7e91e5afe24074b9.gif?imageMogr2/auto-orient/strip)
 
-#### 实现思路的博文地址
+#### 实现思路
 [一款Loading动画的实现思路（一）](http://www.jianshu.com/p/1c6a2de68753)
 
