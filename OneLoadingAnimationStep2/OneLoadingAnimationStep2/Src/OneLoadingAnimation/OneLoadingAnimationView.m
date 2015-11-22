@@ -63,17 +63,22 @@ static CGFloat const kStep2Duration = 3.0;
 - (void)doStep2 {
     self.moveArcLayer = [CAShapeLayer layer];
     [self.layer addSublayer:self.moveArcLayer];
-
     self.moveArcLayer.frame = self.layer.bounds;
     // 弧的path
     UIBezierPath *moveArcPath = [UIBezierPath bezierPath];
-    // 圆心
-    CGPoint centerPoint = CGPointMake(CGRectGetMidX(self.bounds) - kRadius, CGRectGetMidY(self.bounds));
+    // 小圆圆心
+    CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    // d（x轴上弧圆心与小圆左边缘的距离）
+    CGFloat d = kRadius / 2;
+    // 弧圆心
+    CGPoint arcCenter = CGPointMake(center.x - kRadius - d, center.y);
+    // 弧半径
+    CGFloat arcRadius = kRadius * 2 + d;
     // O(origin)
     CGFloat origin = M_PI * 2;
     // D(dest)
-    CGFloat dest = M_PI * 2 - M_PI / 3;
-    [moveArcPath addArcWithCenter:centerPoint radius:kRadius * 2 startAngle:origin endAngle:dest  clockwise:NO];
+    CGFloat dest = M_PI * 2 - asin(kRadius * 2 / arcRadius);
+    [moveArcPath addArcWithCenter:arcCenter radius:arcRadius startAngle:origin endAngle:dest clockwise:NO];
     self.moveArcLayer.path = moveArcPath.CGPath;
     self.moveArcLayer.lineWidth = 3;
     self.moveArcLayer.strokeColor = [UIColor blueColor].CGColor;
