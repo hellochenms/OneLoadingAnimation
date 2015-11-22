@@ -8,4 +8,5 @@
 
 #### 实现思路
 [一款Loading动画的实现思路（一）](http://www.jianshu.com/p/1c6a2de68753)
+[一款Loading动画的实现思路（二）](http://www.jianshu.com/p/0dac1208a7ad)
 
