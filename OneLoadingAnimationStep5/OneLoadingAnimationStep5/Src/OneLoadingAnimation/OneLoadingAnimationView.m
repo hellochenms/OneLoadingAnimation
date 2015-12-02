@@ -16,7 +16,8 @@ static CGFloat const kLineWidth = 6;
 static CGFloat const kStep1Duration = 1.0;
 static CGFloat const kStep2Duration = 0.5;
 static CGFloat const kStep3Duration = 0.15;
-static CGFloat const kStep4Duration = 5.0;
+static CGFloat const kStep4Duration = 0.25;
+static CGFloat const kStep5Duration = 3;
 static CGFloat const kVerticalMoveLayerHeight = 15;
 static CGFloat const kVerticalThinLayerWidth = 3;
 static CGFloat const kYScale = 0.8;
@@ -28,6 +29,8 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 @property (nonatomic) CALayer *verticalMoveLayer;
 @property (nonatomic) CAShapeLayer *verticalDisappearLayer;
 @property (nonatomic) CAShapeLayer *verticalAppearLayer;
+@property (nonatomic) CAShapeLayer *leftAppearLayer;
+@property (nonatomic) CAShapeLayer *rightAppearLayer;
 @end
 
 @implementation OneLoadingAnimationView
@@ -49,6 +52,8 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self.verticalMoveLayer removeFromSuperlayer];
     [self.verticalDisappearLayer removeFromSuperlayer];
     [self.verticalAppearLayer removeFromSuperlayer];
+    [self.leftAppearLayer removeFromSuperlayer];
+    [self.rightAppearLayer removeFromSuperlayer];
 }
 
 // 第1阶段
@@ -172,7 +177,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     CGPoint position = self.arcToCircleLayer.position;
     self.arcToCircleLayer.anchorPoint = CGPointMake(0.5, 1);
     self.arcToCircleLayer.position = CGPointMake(position.x, position.y + kRadius + kLineWidth / 2);
-    self.arcToCircleLayer.color = [UIColor redColor];
+    self.arcToCircleLayer.color = [UIColor lightGrayColor];
 
     // y scale
     CGFloat yFromScale = 1.0;
@@ -222,7 +227,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [path addLineToPoint:CGPointMake(CGRectGetMidX(self.bounds), destY)];
     self.verticalDisappearLayer.path = path.CGPath;
     self.verticalDisappearLayer.lineWidth = kVerticalThinLayerWidth;
-    self.verticalDisappearLayer.strokeColor = [UIColor greenColor].CGColor;
+    self.verticalDisappearLayer.strokeColor = [UIColor lightGrayColor].CGColor;
     self.verticalDisappearLayer.fillColor = nil;
 
     // SS(strokeStart)
@@ -260,22 +265,21 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 
     UIBezierPath *step4cPath = [UIBezierPath bezierPath];
     CGFloat originY = CGRectGetMidY(self.bounds) - kRadius;
-    CGFloat destY = CGRectGetMidY(self.bounds);
+    CGFloat destY = CGRectGetMidY(self.bounds) + kRadius;
     [step4cPath moveToPoint:CGPointMake(CGRectGetMidX(self.bounds), originY)];
     [step4cPath addLineToPoint:CGPointMake(CGRectGetMidX(self.bounds), destY)];
     self.verticalAppearLayer.path = step4cPath.CGPath;
     self.verticalAppearLayer.lineWidth = kVerticalFatLayerWidth;
-    self.verticalAppearLayer.strokeColor = [UIColor blueColor].CGColor;
+    self.verticalAppearLayer.strokeColor = [UIColor lightGrayColor].CGColor;
     self.verticalAppearLayer.fillColor = nil;
-
 
     // SS(strokeStart)
     CGFloat SSFrom = 0;
-    CGFloat SSTo = (1 - kYScale) * 2;
+    CGFloat SSTo = 1 - kYScale;
 
     // SE(strokeEnd)
     CGFloat SEFrom = 0;
-    CGFloat SETo = 1;
+    CGFloat SETo = 0.5;
 
     // end status
     self.verticalAppearLayer.strokeStart = SSTo;
@@ -297,6 +301,124 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 
 }
 
+// step5
+- (void)doStep5 {
+    [self.verticalDisappearLayer removeFromSuperlayer];
+    // 小圆回复原状
+    [self doStep5a];
+    // 竖线成长到全长
+    [self doStep5b];
+    // 左下斜线成长到全长
+    [self doStep5c];
+    // 右下斜线成长到全长
+    [self doStep5d];
+}
+
+- (void)doStep5a {
+    self.arcToCircleLayer.color = [UIColor redColor];
+
+    // end status
+    self.arcToCircleLayer.transform = CATransform3DIdentity;
+
+    // animation
+    CABasicAnimation *anima = [CABasicAnimation animationWithKeyPath:@"transform.scale.y"];
+    anima.duration = kStep5Duration;
+    anima.fromValue = @(kYScale);
+    anima.toValue = @1;
+    [self.arcToCircleLayer addAnimation:anima forKey:nil];
+}
+
+- (void)doStep5b {
+    self.verticalAppearLayer.strokeColor = [UIColor greenColor].CGColor;
+
+    // SS(strokeStart)
+    CGFloat SSFrom = 1 - kYScale;
+    CGFloat SSTo = 0;
+
+    // SE(strokeEnd)
+    CGFloat SEFrom = 0.5;
+    CGFloat SETo = 1;
+
+    // end status
+    self.verticalAppearLayer.strokeStart = SSTo;
+    self.verticalAppearLayer.strokeEnd = SETo;
+
+    // animation
+    CABasicAnimation *startAnimation = [CABasicAnimation animationWithKeyPath:@"strokeStart"];
+    startAnimation.fromValue = @(SSFrom);
+    startAnimation.toValue = @(SSTo);
+
+    CABasicAnimation *endAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    endAnimation.fromValue = @(SEFrom);
+    endAnimation.toValue = @(SETo);
+
+    CAAnimationGroup *anima = [CAAnimationGroup animation];
+    anima.animations = @[startAnimation, endAnimation];
+    anima.duration = kStep5Duration;
+    [self.verticalAppearLayer addAnimation:anima forKey:nil];
+}
+
+
+- (void)doStep5c {
+    self.leftAppearLayer = [CAShapeLayer layer];
+    [self.layer addSublayer:self.leftAppearLayer];
+
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    CGPoint originPoint = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    [path moveToPoint:originPoint];
+    CGFloat deltaX = kRadius * sin(M_PI / 3);
+    CGFloat deltaY = kRadius * cos(M_PI / 3);
+    CGPoint destPoint = originPoint;
+    destPoint.x -= deltaX;
+    destPoint.y += deltaY;
+    [path addLineToPoint:destPoint];
+    self.leftAppearLayer.path = path.CGPath;
+    self.leftAppearLayer.lineWidth = kLineWidth;
+    self.leftAppearLayer.strokeColor = [UIColor blueColor].CGColor;
+    self.leftAppearLayer.fillColor = nil;
+
+    // end status
+    CGFloat strokeEnd = 1;
+    self.leftAppearLayer.strokeEnd = strokeEnd;
+
+    // animation
+    CABasicAnimation *anima = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    anima.duration = kStep5Duration;
+    anima.fromValue = @0;
+    anima.toValue = @(strokeEnd);
+    [self.leftAppearLayer addAnimation:anima forKey:nil];
+}
+
+- (void)doStep5d {
+    self.rightAppearLayer = [CAShapeLayer layer];
+    [self.layer addSublayer:self.rightAppearLayer];
+
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    CGPoint originPoint = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    [path moveToPoint:originPoint];
+    CGFloat deltaX = kRadius * sin(M_PI / 3);
+    CGFloat deltaY = kRadius * cos(M_PI / 3);
+    CGPoint destPoint = originPoint;
+    destPoint.x += deltaX;
+    destPoint.y += deltaY;
+    [path addLineToPoint:destPoint];
+    self.rightAppearLayer.path = path.CGPath;
+    self.rightAppearLayer.lineWidth = kLineWidth;
+    self.rightAppearLayer.strokeColor = [UIColor orangeColor].CGColor;
+    self.rightAppearLayer.fillColor = nil;
+
+    // end status
+    CGFloat strokeEnd = 1;
+
+    // animation
+    self.rightAppearLayer.strokeEnd = strokeEnd;
+    CABasicAnimation *anima = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    anima.duration = kStep5Duration;
+    anima.fromValue = @0;
+    anima.toValue = @(strokeEnd);
+    [self.rightAppearLayer addAnimation:anima forKey:nil];
+}
+
 #pragma mark - animation step stop
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     if ([[anim valueForKey:kName] isEqualToString:@"step1"]) {
@@ -305,7 +427,10 @@ static CGFloat const kVerticalFatLayerWidth = 6;
         [self doStep3];
     } else if ([[anim valueForKey:kName] isEqualToString:@"step3"]) {
         [self doStep4];
+    } else if ([[anim valueForKey:kName] isEqualToString:@"step4"]) {
+        [self doStep5];
     }
+
 }
 
 
