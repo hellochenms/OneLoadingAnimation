@@ -7,7 +7,7 @@
 ![](http://upload-images.jianshu.io/upload_images/1013170-7e91e5afe24074b9.gif?imageMogr2/auto-orient/strip)
 
 #### 实现思路
-[一款Loading动画的实现思路（一）](http://www.jianshu.com/p/1c6a2de68753)
-
-[一款Loading动画的实现思路（二）](http://www.jianshu.com/p/0dac1208a7ad)
+- [一款Loading动画的实现思路（一）](http://www.jianshu.com/p/1c6a2de68753)
+- [一款Loading动画的实现思路（二）](http://www.jianshu.com/p/0dac1208a7ad)
+- [一款Loading动画的实现思路（三)](http://www.jianshu.com/p/56448d3d3596)
 
