@@ -13,8 +13,8 @@
 		1A3245701C0DF12B00F90578 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A32456E1C0DF12B00F90578 /* Main.storyboard */; };
 		1A3245721C0DF12B00F90578 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A3245711C0DF12B00F90578 /* Assets.xcassets */; };
 		1A3245751C0DF12B00F90578 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A3245731C0DF12B00F90578 /* LaunchScreen.storyboard */; };
-		1A3245811C0DF18700F90578 /* ArcToCircleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32457E1C0DF18700F90578 /* ArcToCircleLayer.m */; settings = {ASSET_TAGS = (); }; };
-		1A3245821C0DF18700F90578 /* OneLoadingAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3245801C0DF18700F90578 /* OneLoadingAnimationView.m */; settings = {ASSET_TAGS = (); }; };
+		1A3245811C0DF18700F90578 /* ArcToCircleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32457E1C0DF18700F90578 /* ArcToCircleLayer.m */; };
+		1A3245821C0DF18700F90578 /* OneLoadingAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3245801C0DF18700F90578 /* OneLoadingAnimationView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,10 +89,10 @@
 		1A32457C1C0DF18700F90578 /* OneLoadingAnimation */ = {
 			isa = PBXGroup;
 			children = (
-				1A32457D1C0DF18700F90578 /* ArcToCircleLayer.h */,
-				1A32457E1C0DF18700F90578 /* ArcToCircleLayer.m */,
 				1A32457F1C0DF18700F90578 /* OneLoadingAnimationView.h */,
 				1A3245801C0DF18700F90578 /* OneLoadingAnimationView.m */,
+				1A32457D1C0DF18700F90578 /* ArcToCircleLayer.h */,
+				1A32457E1C0DF18700F90578 /* ArcToCircleLayer.m */,
 			);
 			name = OneLoadingAnimation;
 			path = Src/OneLoadingAnimation;

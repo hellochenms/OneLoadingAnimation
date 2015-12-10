@@ -47,6 +47,7 @@ static CGFloat const kVerticalMoveLayerLength = 15;
 // 第1阶段
 - (void)doStep1 {
     self.arcToCircleLayer = [ArcToCircleLayer layer];
+    self.arcToCircleLayer.contentsScale = [UIScreen mainScreen].scale;
     [self.layer addSublayer:self.arcToCircleLayer];
 
     self.arcToCircleLayer.bounds = CGRectMake(0, 0, kRadius * 2 + kLineWidth, kRadius * 2 + kLineWidth);
@@ -127,6 +128,7 @@ static CGFloat const kVerticalMoveLayerLength = 15;
 
     // step3 layer
     self.verticalMoveLayer = [CALayer layer];
+    self.verticalMoveLayer.contentsScale = [UIScreen mainScreen].scale;
     [self.layer addSublayer:self.verticalMoveLayer];
 
     CGFloat height = kVerticalMoveLayerLength;

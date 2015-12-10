@@ -42,6 +42,7 @@ static CGFloat const kStep2Duration = 3.0;
 // 第1阶段
 - (void)doStep1 {
     self.arcToCircleLayer = [ArcToCircleLayer layer];
+    self.arcToCircleLayer.contentsScale = [UIScreen mainScreen].scale;
     [self.layer addSublayer:self.arcToCircleLayer];
 
     self.arcToCircleLayer.bounds = CGRectMake(0, 0, kRadius * 2 + kLineWidth, kRadius * 2 + kLineWidth);

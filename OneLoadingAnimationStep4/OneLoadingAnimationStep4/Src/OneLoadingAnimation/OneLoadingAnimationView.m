@@ -54,6 +54,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 // 第1阶段
 - (void)doStep1 {
     self.arcToCircleLayer = [ArcToCircleLayer layer];
+    self.arcToCircleLayer.contentsScale = [UIScreen mainScreen].scale;
     self.arcToCircleLayer.color = [UIColor lightGrayColor];
     self.arcToCircleLayer.lineWidth = kLineWidth;
     [self.layer addSublayer:self.arcToCircleLayer];
@@ -137,6 +138,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 
     // step3 layer
     self.verticalMoveLayer = [CALayer layer];
+    self.verticalMoveLayer.contentsScale = [UIScreen mainScreen].scale;
     [self.layer addSublayer:self.verticalMoveLayer];
 
     CGFloat height = kVerticalMoveLayerHeight;
@@ -169,9 +171,9 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 }
 // 4阶段a：小圆变形
 - (void)doStep4a {
-    CGPoint position = self.arcToCircleLayer.position;
+    CGRect frame = self.arcToCircleLayer.frame;
     self.arcToCircleLayer.anchorPoint = CGPointMake(0.5, 1);
-    self.arcToCircleLayer.position = CGPointMake(position.x, position.y + kRadius + kLineWidth / 2);
+    self.arcToCircleLayer.frame = frame;
     self.arcToCircleLayer.color = [UIColor redColor];
 
     // y scale

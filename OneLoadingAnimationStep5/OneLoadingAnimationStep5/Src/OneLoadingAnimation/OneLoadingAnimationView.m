@@ -59,6 +59,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 // 第1阶段
 - (void)doStep1 {
     self.arcToCircleLayer = [ArcToCircleLayer layer];
+    self.arcToCircleLayer.contentsScale = [UIScreen mainScreen].scale;
     self.arcToCircleLayer.color = [UIColor lightGrayColor];
     self.arcToCircleLayer.lineWidth = kLineWidth;
     [self.layer addSublayer:self.arcToCircleLayer];
@@ -142,6 +143,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 
     // step3 layer
     self.verticalMoveLayer = [CALayer layer];
+    self.verticalMoveLayer.contentsScale = [UIScreen mainScreen].scale;
     [self.layer addSublayer:self.verticalMoveLayer];
 
     CGFloat height = kVerticalMoveLayerHeight;
