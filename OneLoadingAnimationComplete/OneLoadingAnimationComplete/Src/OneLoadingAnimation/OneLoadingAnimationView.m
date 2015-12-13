@@ -49,6 +49,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 
 @implementation OneLoadingAnimationView
 
+#pragma mark - life cycle
 - (void)awakeFromNib {
     [super awakeFromNib];
 
@@ -70,7 +71,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self doStep1];
 }
 
-#pragma mark - animation
+#pragma mark - reset
 - (void)reset {
     [self.arcToCircleLayer removeFromSuperlayer];
     [self.moveArcLayer removeFromSuperlayer];
@@ -85,21 +86,20 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self.layer removeAllAnimations];
 }
 
-// 第1阶段
+#pragma mark - step1
 - (void)doStep1 {
     self.arcToCircleLayer = [ArcToCircleLayer layer];
     self.arcToCircleLayer.contentsScale = [UIScreen mainScreen].scale;
     self.arcToCircleLayer.color = self.likeBlackColor;
     self.arcToCircleLayer.lineWidth = kLineWidth;
-    [self.layer addSublayer:self.arcToCircleLayer];
-
-    self.arcToCircleLayer.bounds = CGRectMake(0, 0, kRadius * 2 + kLineWidth, kRadius * 2 + kLineWidth);
     self.arcToCircleLayer.bounds = CGRectMake(0, 0, kRadius * 2 + kLineWidth, kRadius * 2 + kLineWidth);
     self.arcToCircleLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    [self.layer addSublayer:self.arcToCircleLayer];
+
+    // end status
+    self.arcToCircleLayer.progress = 1;
 
     // animation
-    self.arcToCircleLayer.progress = 1; // end status
-
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"progress"];
     animation.duration = kStep1Duration;
     animation.fromValue = @0.0;
@@ -109,7 +109,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self.arcToCircleLayer addAnimation:animation forKey:nil];
 }
 
-// 第2阶段
+#pragma mark - step2
 - (void)doStep2 {
     self.moveArcLayer = [CAShapeLayer layer];
     [self.layer addSublayer:self.moveArcLayer];
@@ -165,7 +165,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self.moveArcLayer addAnimation:step2 forKey:nil];
 }
 
-// 第3阶段
+#pragma mark - step3
 - (void)doStep3 {
     // prepare for step3
     [self.moveArcLayer removeFromSuperlayer];
@@ -197,7 +197,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self.verticalMoveLayer addAnimation:step3 forKey:nil];
 }
 
-// 第4阶段
+#pragma mark - step4
 - (void)doStep4 {
     [self prepareForStep4];
     [self doStep4a];
@@ -205,16 +205,15 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self doStep4c];
 }
 
-//
 - (void)prepareForStep4 {
     [self.verticalMoveLayer removeFromSuperlayer];
 }
 
 // 4阶段a：小圆变形
 - (void)doStep4a {
-    CGPoint position = self.arcToCircleLayer.position;
+    CGRect frame = self.arcToCircleLayer.frame;
     self.arcToCircleLayer.anchorPoint = CGPointMake(0.5, 1);
-    self.arcToCircleLayer.position = CGPointMake(position.x, position.y + kRadius + kLineWidth / 2);
+    self.arcToCircleLayer.frame = frame;
 
     // y scale
     CGFloat yFromScale = 1.0;
@@ -240,14 +239,13 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     anima.animations = @[yAnima, xAnima];
     anima.duration = kStep4Duration;
     anima.delegate = self;
-    [anima setValue:@"step4" forKey:@"name"];
+    [anima setValue:@"step4" forKey:kName];
 
     [self.arcToCircleLayer addAnimation:anima forKey:nil];
 }
 
 // 4阶段b：逐渐消失的细线
 - (void)doStep4b {
-    // new
     self.verticalDisappearLayer = [CAShapeLayer layer];
     self.verticalDisappearLayer.frame = self.bounds;
     [self.layer addSublayer:self.verticalDisappearLayer];
@@ -335,7 +333,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
 
 }
 
-// step5
+#pragma mark - step5
 - (void)doStep5 {
     [self prepareForStep5];
     [self doStep5a];
@@ -359,7 +357,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     anima.fromValue = @(kYScale);
     anima.toValue = @1;
     anima.delegate = self;
-    [anima setValue:@"step5" forKey:@"name"];
+    [anima setValue:@"step5" forKey:kName];
     [self.arcToCircleLayer addAnimation:anima forKey:nil];
 }
 
@@ -454,7 +452,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self.rightAppearLayer addAnimation:anima forKey:nil];
 }
 
-// step6 success
+#pragma mark - step6 success
 - (void)doStep6Success {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kBeforeStep6SuccessDelay * 1000 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
         [self prepareForStep6Success];;
@@ -511,7 +509,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self.checkMarkLayer addAnimation:step6bAnimation forKey:nil];
 }
 
-// step6 fail
+#pragma mark - step6 fail
 - (void)doStep6Fail {
     [self prepareForStep6Fail];
     [self processStep6FailA];
@@ -566,7 +564,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     anima.animations = @[startAnimation, endAnimation];
     anima.duration = kStep6FailDuration;
     anima.delegate = self;
-    [anima setValue:@"step6Fail" forKey:@"name"];
+    [anima setValue:@"step6Fail" forKey:kName];
 
     [self.exclamationMarkTopLayer addAnimation:anima forKey:nil];
 }
@@ -614,7 +612,7 @@ static CGFloat const kVerticalFatLayerWidth = 6;
     [self.exclamationMarkBottomLayer addAnimation:anima forKey:nil];
 }
 
-// step7 fail
+#pragma mark - step7 fail
 - (void)doStep7Fail {
     CABasicAnimation *anima = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     anima.fromValue = @(-M_PI / 12);

@@ -8,8 +8,6 @@
 
 #import "ArcToCircleLayer.h"
 
-static CGFloat const kLineWidth = 6;
-
 @implementation ArcToCircleLayer
 
 @dynamic progress;
@@ -31,7 +29,7 @@ static CGFloat const kLineWidth = 6;
 - (void)drawInContext:(CGContextRef)ctx {
     UIBezierPath *path = [UIBezierPath bezierPath];
 
-    CGFloat radius = MIN(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)) / 2 - kLineWidth / 2;
+    CGFloat radius = MIN(CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)) / 2 - self.lineWidth / 2;
     CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 
     // O
