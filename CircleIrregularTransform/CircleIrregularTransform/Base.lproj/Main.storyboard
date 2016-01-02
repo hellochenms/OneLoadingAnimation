@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e3b-Lc-Aay">
+                                <rect key="frame" x="150" y="40" width="120" height="44"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="5jf-LQ-muq"/>
+                                    <constraint firstAttribute="width" constant="120" id="vX1-gj-HKJ"/>
+                                </constraints>
+                                <state key="normal" title="startAnimation"/>
+                                <connections>
+                                    <action selector="onTapStartAnimation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zBy-1A-kXD"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6hR-XC-LMZ" userLabel="animationView">
+                                <rect key="frame" x="150" y="94" width="300" height="300"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="2H0-GM-mBG"/>
+                                    <constraint firstAttribute="width" constant="300" id="iMj-gd-xcf"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="e3b-Lc-Aay" firstAttribute="leading" secondItem="6hR-XC-LMZ" secondAttribute="leading" id="D9d-25-AKv"/>
+                            <constraint firstItem="6hR-XC-LMZ" firstAttribute="top" secondItem="e3b-Lc-Aay" secondAttribute="bottom" constant="10" id="Hoq-ga-TAI"/>
+                            <constraint firstItem="e3b-Lc-Aay" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="K3j-kG-YZm"/>
+                            <constraint firstItem="6hR-XC-LMZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="nTW-30-9ei"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="animationView" destination="6hR-XC-LMZ" id="Ofg-Lg-erc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>
