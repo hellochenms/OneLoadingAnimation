@@ -11,7 +11,6 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet weak var animationView: UIView!
 
-    let radius: CGFloat = 100.0
     var animationLayer: CircleIrregularTransformLayer!
 
     // MARK: - life cycle
@@ -25,7 +24,6 @@ class ViewController: UIViewController {
         animationLayer = CircleIrregularTransformLayer()
         animationLayer.contentsScale = UIScreen.mainScreen().scale
         animationLayer.frame = animationView.bounds
-        animationLayer.radius = radius
         animationLayer.progress = 0;
         animationView.layer.addSublayer(animationLayer)
     }
@@ -40,14 +38,10 @@ class ViewController: UIViewController {
         // reset
         animationLayer.removeAllAnimations()
 
-        // end status
-        self.animationLayer.progress = 1.0;
-
         // animation
         let animation = CABasicAnimation(keyPath: "progress")
         animation.duration = 2
         animation.autoreverses = true
-        animation.repeatCount = Float.infinity
         animation.fromValue = 0.0
         animation.toValue = 1.0
         animationLayer.addAnimation(animation, forKey: nil)

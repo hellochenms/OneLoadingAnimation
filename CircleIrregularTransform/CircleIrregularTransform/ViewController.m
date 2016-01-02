@@ -9,8 +9,6 @@
 #import "ViewController.h"
 #import "CircleIrregularTransformLayer.h"
 
-static CGFloat const kRadius = 100;
-
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIView *animationView;
 @property (nonatomic) CircleIrregularTransformLayer *animationLayer;
@@ -18,33 +16,32 @@ static CGFloat const kRadius = 100;
 
 @implementation ViewController
 
+#pragma mark - life cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+
+    [self addAnimationLayer];
 }
+
+- (void)addAnimationLayer {
+    self.animationLayer = [CircleIrregularTransformLayer layer];
+    self.animationLayer.contentsScale = [UIScreen mainScreen].scale;
+    self.animationLayer.frame = self.animationView.bounds;
+    self.animationLayer.progress = 0;
+    [self.animationView.layer addSublayer:self.animationLayer];
+}
+
 
 #pragma mark - user event
 - (IBAction)onTapStartAnimation:(id)sender {
     // reset
-    [self.animationLayer removeFromSuperlayer];
-
-    // layer
-    self.animationLayer = [CircleIrregularTransformLayer layer];
-    self.animationLayer.contentsScale = [UIScreen mainScreen].scale;
-    self.animationLayer.frame = self.animationView.bounds;
-    self.animationLayer.radius = kRadius;
-    self.animationLayer.progress = 0;
-
-    [self.animationView.layer addSublayer:self.animationLayer];
-
-    // end status
-    self.animationLayer.progress = 1.0;
+    [self.animationLayer removeAllAnimations];
 
     // animation
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"progress"];
     animation.duration = 2;
     animation.autoreverses = YES;
-    animation.repeatCount = MAXFLOAT;
     animation.fromValue = @(0.0);
     animation.toValue = @(1.0);
     [self.animationLayer addAnimation:animation forKey:nil];

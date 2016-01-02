@@ -13,16 +13,15 @@ static CGFloat const kLineWidth = 6;
 static CGFloat const kYScale = 0.8;
 static CGFloat const kXScale = 0.8;
 static CGFloat const kControlPointFactor = 1.8;
+static CGFloat const kRadius = 80;
+static CGFloat const pointRadius = 3;
 
 @implementation CircleIrregularTransformLayer
 
-@dynamic radius;
 @dynamic progress;
 
 + (BOOL)needsDisplayForKey:(NSString *)key {
-    if ([key isEqualToString:@"radius"]) {
-        return YES;
-    } else if ([key isEqualToString:@"progress"]) {
+    if ([key isEqualToString:@"progress"]) {
         return YES;
     }
 
@@ -32,34 +31,33 @@ static CGFloat const kControlPointFactor = 1.8;
 - (void)drawInContext:(CGContextRef)ctx {
     UIBezierPath *path = [UIBezierPath bezierPath];
 
-    CGFloat radius = self.radius;
     CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 
     // x轴上的偏移距离
-    CGFloat xMoveOffsetDistance = radius * 2 * (1 - kXScale) / 2 * self.progress;
+    CGFloat xMoveOffsetDistance = kRadius * 2 * (1 - kXScale) / 2 * self.progress;
     // y轴上的偏移距离
-    CGFloat yMoveOffsetDistance = radius * 2 * (1 - kYScale) / 2 * self.progress;
+    CGFloat yMoveOffsetDistance = kRadius * 2 * (1 - kYScale) / 2 * self.progress;
     // control点在对应轴上（x或y轴）到对应点（起点或终点）的偏移距离
-    CGFloat controlOffsetDistance = radius / kControlPointFactor;
+    CGFloat controlOffsetDistance = kRadius / kControlPointFactor;
 
     // 右上弧
-    CGPoint origin0 = CGPointMake(center.x + radius + xMoveOffsetDistance, center.y + yMoveOffsetDistance);
-    CGPoint dest0 = CGPointMake(center.x, center.y - radius + yMoveOffsetDistance * 3);
+    CGPoint origin0 = CGPointMake(center.x + kRadius + xMoveOffsetDistance, center.y + yMoveOffsetDistance);
+    CGPoint dest0 = CGPointMake(center.x, center.y - kRadius + yMoveOffsetDistance * 3);
     CGPoint control0A = CGPointMake(origin0.x, origin0.y - controlOffsetDistance);
-    CGPoint control0B = CGPointMake(dest0.x + controlOffsetDistance, center.y - radius + yMoveOffsetDistance * 2);
+    CGPoint control0B = CGPointMake(dest0.x + controlOffsetDistance, center.y - kRadius + yMoveOffsetDistance * 2);
     [path moveToPoint:origin0];
     [path addCurveToPoint:dest0 controlPoint1:control0A controlPoint2:control0B];
 
     // 左上弧
     CGPoint origin1 = dest0;
-    CGPoint dest1 = CGPointMake(center.x - radius - xMoveOffsetDistance, center.y + yMoveOffsetDistance);
-    CGPoint control1A = CGPointMake(origin1.x - controlOffsetDistance, center.y - radius + yMoveOffsetDistance * 2);
+    CGPoint dest1 = CGPointMake(center.x - kRadius - xMoveOffsetDistance, center.y + yMoveOffsetDistance);
+    CGPoint control1A = CGPointMake(origin1.x - controlOffsetDistance, center.y - kRadius + yMoveOffsetDistance * 2);
     CGPoint control1B = CGPointMake(dest1.x, dest1.y - controlOffsetDistance);
     [path addCurveToPoint:dest1 controlPoint1:control1A controlPoint2:control1B];
 
     // 左下弧
     CGPoint origin2 = dest1;
-    CGPoint dest2 = CGPointMake(center.x, center.y + radius);
+    CGPoint dest2 = CGPointMake(center.x, center.y + kRadius);
     CGPoint control2A = CGPointMake(origin2.x, origin2.y + controlOffsetDistance);
     CGPoint control2B = CGPointMake(dest2.x - controlOffsetDistance, dest2.y);
     [path addCurveToPoint:dest2 controlPoint1:control2A controlPoint2:control2B];
@@ -136,7 +134,6 @@ static CGFloat const kControlPointFactor = 1.8;
 
 #pragma mark - tools
 - (void)addArcForPath:(UIBezierPath *)path atPoint:(CGPoint)point {
-    CGFloat pointRadius = 3;
     [path moveToPoint:point];
     [path addArcWithCenter:point radius:pointRadius startAngle:0 endAngle:M_PI * 2 clockwise:YES];
 }

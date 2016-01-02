@@ -9,6 +9,5 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface CircleIrregularTransformLayer : CALayer
-@property (nonatomic) CGFloat radius;
 @property (nonatomic) CGFloat progress;
 @end

@@ -9,10 +9,9 @@
 import UIKit
 
 class CircleIrregularTransformLayer: CALayer {
-    // MARK: -
-    var radius: CGFloat?
     var progress: CGFloat = 0
 
+    let radius: CGFloat = 80
     let lineWidth: CGFloat = 6.0
     let xScale: CGFloat = 0.8
     let yScale: CGFloat = 0.8
@@ -24,7 +23,6 @@ class CircleIrregularTransformLayer: CALayer {
         super.init(layer: layer)
 
         let theLayer = layer as! CircleIrregularTransformLayer
-        radius = theLayer.radius
         progress = theLayer.progress
     }
 
@@ -39,7 +37,7 @@ class CircleIrregularTransformLayer: CALayer {
     // MARK: - needsDisplayForKey
     override static func needsDisplayForKey(key: String) -> Bool {
         switch key {
-        case "radius", "progress":
+        case "progress":
             return true
         default:
             break
@@ -50,10 +48,6 @@ class CircleIrregularTransformLayer: CALayer {
 
     // MARK: - draw
     override func drawInContext(ctx: CGContext) {
-        guard let radius = self.radius else {
-            return
-        }
-
         let path = UIBezierPath()
         let center = CGPoint(x: CGRectGetMidX(bounds), y: CGRectGetMidY(bounds))
         let xMoveOffsetDistance = radius * 2 * (1 - xScale) / 2 * progress
