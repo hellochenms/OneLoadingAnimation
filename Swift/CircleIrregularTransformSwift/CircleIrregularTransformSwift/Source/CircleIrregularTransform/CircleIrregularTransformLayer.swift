@@ -13,7 +13,7 @@ class CircleIrregularTransformLayer: CALayer {
 
     let radius: CGFloat = 80
     let lineWidth: CGFloat = 6.0
-    let xScale: CGFloat = 0.8
+    let xScale: CGFloat = 1.2
     let yScale: CGFloat = 0.8
     let controlPointFactor: CGFloat = 1.8
     let pointRadius: CGFloat = 3.0
@@ -49,29 +49,36 @@ class CircleIrregularTransformLayer: CALayer {
     // MARK: - draw
     override func drawInContext(ctx: CGContext) {
         let path = UIBezierPath()
-        let center = CGPoint(x: CGRectGetMidX(bounds), y: CGRectGetMidY(bounds))
-        let xMoveOffsetDistance = radius * 2 * (1 - xScale) / 2 * progress
-        let yMoveOffsetDistance = radius * 2 * (1 - yScale) / 2 * progress
+
+        // 以底点为原点
+        let bottom = CGPoint(x: CGRectGetMidX(bounds), y: CGRectGetMidY(bounds) + radius)
+        // 控制点偏移距离
         let controlOffsetDistance = radius / controlPointFactor
 
+        // 各点变化系数
+        let xFactor = 1 + (xScale - 1) * progress
+        let yFactor = 1 - (1 - yScale) * progress
+        // 顶点特殊的变化系数（破坏规则变形）
+        let topYFactor = 1 - (1 - yScale) * progress * 1.5
+
         // 右上弧
-        let origin0 = CGPointMake(center.x + radius + xMoveOffsetDistance, center.y + yMoveOffsetDistance)
-        let dest0 = CGPointMake(center.x, center.y - radius + yMoveOffsetDistance * 3)
+        let origin0 = CGPointMake(bottom.x + radius * xFactor, bottom.y - radius * yFactor)
+        let dest0 = CGPointMake(bottom.x, bottom.y - radius * 2 * topYFactor)
         let control0A = CGPointMake(origin0.x, origin0.y - controlOffsetDistance)
-        let control0B = CGPointMake(dest0.x + controlOffsetDistance, center.y - radius + yMoveOffsetDistance * 2)
+        let control0B = CGPointMake(dest0.x + controlOffsetDistance, bottom.y - radius * 2 * yFactor)
         path.moveToPoint(origin0)
         path.addCurveToPoint(dest0, controlPoint1: control0A, controlPoint2: control0B)
 
         // 左上弧
         let origin1 = dest0
-        let dest1 = CGPointMake(center.x - radius - xMoveOffsetDistance, center.y + yMoveOffsetDistance)
-        let control1A = CGPointMake(origin1.x - controlOffsetDistance, center.y - radius + yMoveOffsetDistance * 2)
+        let dest1 = CGPointMake(bottom.x - radius * xFactor, bottom.y - radius * yFactor)
+        let control1A = CGPointMake(origin1.x - controlOffsetDistance, bottom.y - radius * 2 * yFactor)
         let control1B = CGPointMake(dest1.x, dest1.y - controlOffsetDistance)
         path.addCurveToPoint(dest1, controlPoint1: control1A, controlPoint2: control1B)
 
         // 左下弧
         let origin2 = dest1
-        let dest2 = CGPointMake(center.x, center.y + radius)
+        let dest2 = bottom
         let control2A = CGPointMake(origin2.x, origin2.y + controlOffsetDistance)
         let control2B = CGPointMake(dest2.x - controlOffsetDistance, dest2.y)
         path.addCurveToPoint(dest2, controlPoint1: control2A, controlPoint2: control2B)

@@ -10,8 +10,8 @@
 #import <UIKit/UIKit.h>
 
 static CGFloat const kLineWidth = 6;
+static CGFloat const kXScale = 1.2;
 static CGFloat const kYScale = 0.8;
-static CGFloat const kXScale = 0.8;
 static CGFloat const kControlPointFactor = 1.8;
 static CGFloat const kRadius = 80;
 static CGFloat const pointRadius = 3;
@@ -31,33 +31,35 @@ static CGFloat const pointRadius = 3;
 - (void)drawInContext:(CGContextRef)ctx {
     UIBezierPath *path = [UIBezierPath bezierPath];
 
-    CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-
-    // x轴上的偏移距离
-    CGFloat xMoveOffsetDistance = kRadius * 2 * (1 - kXScale) / 2 * self.progress;
-    // y轴上的偏移距离
-    CGFloat yMoveOffsetDistance = kRadius * 2 * (1 - kYScale) / 2 * self.progress;
-    // control点在对应轴上（x或y轴）到对应点（起点或终点）的偏移距离
+    // 以底点为原点
+    CGPoint bottom = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) + kRadius);
+    // 控制点偏移距离
     CGFloat controlOffsetDistance = kRadius / kControlPointFactor;
+    
+    // 各点变化系数
+    CGFloat xFactor = 1 + (kXScale - 1) * self.progress;
+    CGFloat yFactor = 1 - (1 - kYScale) * self.progress;
+    // 顶点特殊的变化系数（破坏规则变形）
+    CGFloat topYFactor = 1 - (1 - kYScale) * self.progress * 1.5;
 
     // 右上弧
-    CGPoint origin0 = CGPointMake(center.x + kRadius + xMoveOffsetDistance, center.y + yMoveOffsetDistance);
-    CGPoint dest0 = CGPointMake(center.x, center.y - kRadius + yMoveOffsetDistance * 3);
+    CGPoint origin0 = CGPointMake(bottom.x + kRadius * xFactor, bottom.y - kRadius * yFactor);
+    CGPoint dest0 = CGPointMake(bottom.x, bottom.y - kRadius * 2 * topYFactor);
     CGPoint control0A = CGPointMake(origin0.x, origin0.y - controlOffsetDistance);
-    CGPoint control0B = CGPointMake(dest0.x + controlOffsetDistance, center.y - kRadius + yMoveOffsetDistance * 2);
+    CGPoint control0B = CGPointMake(dest0.x + controlOffsetDistance, bottom.y - kRadius * 2 * yFactor);
     [path moveToPoint:origin0];
     [path addCurveToPoint:dest0 controlPoint1:control0A controlPoint2:control0B];
 
     // 左上弧
     CGPoint origin1 = dest0;
-    CGPoint dest1 = CGPointMake(center.x - kRadius - xMoveOffsetDistance, center.y + yMoveOffsetDistance);
-    CGPoint control1A = CGPointMake(origin1.x - controlOffsetDistance, center.y - kRadius + yMoveOffsetDistance * 2);
+    CGPoint dest1 = CGPointMake(bottom.x - kRadius * xFactor, bottom.y - kRadius * yFactor);
+    CGPoint control1A = CGPointMake(origin1.x - controlOffsetDistance, bottom.y - kRadius * 2 * yFactor);
     CGPoint control1B = CGPointMake(dest1.x, dest1.y - controlOffsetDistance);
     [path addCurveToPoint:dest1 controlPoint1:control1A controlPoint2:control1B];
 
     // 左下弧
     CGPoint origin2 = dest1;
-    CGPoint dest2 = CGPointMake(center.x, center.y + kRadius);
+    CGPoint dest2 = bottom;
     CGPoint control2A = CGPointMake(origin2.x, origin2.y + controlOffsetDistance);
     CGPoint control2B = CGPointMake(dest2.x - controlOffsetDistance, dest2.y);
     [path addCurveToPoint:dest2 controlPoint1:control2A controlPoint2:control2B];

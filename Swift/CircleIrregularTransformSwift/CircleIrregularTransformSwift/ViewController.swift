@@ -38,10 +38,12 @@ class ViewController: UIViewController {
         // reset
         animationLayer.removeAllAnimations()
 
+        // end status
+        animationLayer.progress = 1;
+
         // animation
         let animation = CABasicAnimation(keyPath: "progress")
         animation.duration = 2
-        animation.autoreverses = true
         animation.fromValue = 0.0
         animation.toValue = 1.0
         animationLayer.addAnimation(animation, forKey: nil)

@@ -37,11 +37,13 @@
 - (IBAction)onTapStartAnimation:(id)sender {
     // reset
     [self.animationLayer removeAllAnimations];
+    
+    // end status
+    self.animationLayer.progress = 1;
 
     // animation
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"progress"];
     animation.duration = 2;
-    animation.autoreverses = YES;
     animation.fromValue = @(0.0);
     animation.toValue = @(1.0);
     [self.animationLayer addAnimation:animation forKey:nil];
