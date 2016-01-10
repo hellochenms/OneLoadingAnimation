@@ -11,4 +11,4 @@
 - [一款Loading动画的实现思路（二）](http://www.jianshu.com/p/0dac1208a7ad)
 - [一款Loading动画的实现思路（三)](http://www.jianshu.com/p/56448d3d3596)
 - [一款Loading动画的实现思路（四·完结篇）](http://www.jianshu.com/p/41f277682c91)
-
+- [Loading动画外篇·圆的不规则变形](http://www.jianshu.com/p/ce4e5f226d34)
